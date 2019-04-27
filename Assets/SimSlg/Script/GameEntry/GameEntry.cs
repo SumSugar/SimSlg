@@ -20,7 +20,7 @@ public class GameEntry : MonoBehaviour
         EventModule.Instance.Update();
         //监听输入
         InputModule.Instance.Update();
-        //对象池自动回收
+        //对象池过期查询
         ObjPoolModule.Instance.Update();
     }
     private void Start()

@@ -6,10 +6,9 @@
 
 
 using System.Collections.Generic;
-using UnityEngine;
 
 public class EntityModule : BaseModuleSingleton<EntityModule> {
-    private static int entityId = 0;
+    private static int entityId = 0;//实体的id
     Dictionary<string, List<BaseEntity>> entities = new Dictionary<string, List<BaseEntity>>();//全部实体
     /// <summary>
     /// 生成实体
@@ -21,24 +20,21 @@ public class EntityModule : BaseModuleSingleton<EntityModule> {
     /// <param name="entityGroup"></param>
     /// <param name="assetPath"></param>
     /// <returns></returns>
-    private T SpawnEntity<T>(string name, BaseData data, BaseLogic logic, string entityGroup, string assetPath) where T:BaseEntity{ 
-        ObjPoolModule opm = ObjPoolModule.Instance as ObjPoolModule;
-        BaseEntity entity = opm.SpawnEntity(name,assetPath);
-        entity.OnInit(GetEntityId(),data,logic,entityGroup,assetPath);
+    public T SpawnEntity<T>(BaseData data, BaseLogic logic, string entityGroup, string assetPath) where T:BaseEntity{ 
+        BaseEntity entity = ObjPoolModule.Instance.SpawnEntity(data,logic,entityGroup,assetPath);
         return entity as T;
     }
     /// <summary>
     /// 回收实体
     /// </summary>
     /// <param name="entity"></param>
-    private void UnSpawnEntity(BaseEntity entity) {
-        ObjPoolModule opm = ObjPoolModule.Instance as ObjPoolModule;
-        opm.UnSpawnEntity(entity);
+    public void UnSpawnEntity(BaseEntity entity) {
+        ObjPoolModule.Instance.UnSpawnEntity(entity);
     }
     /// <summary>
     /// 回收全部实体
     /// </summary>
-    private void UnSpawnAllEntities() {
+    public void UnSpawnAllEntities() {
         foreach (var entityList in entities.Values)
         {
             foreach (var entity in entityList)
@@ -52,7 +48,7 @@ public class EntityModule : BaseModuleSingleton<EntityModule> {
     /// </summary>
     /// <param name="group"></param>
     /// <returns></returns>
-    private List<BaseEntity> GetEntitiesByGroup(string group) {
+    public List<BaseEntity> GetEntitiesByGroup(string group) {
         List<BaseEntity> entities;
         this.entities.TryGetValue(group, out entities);
         return entities;
@@ -61,9 +57,9 @@ public class EntityModule : BaseModuleSingleton<EntityModule> {
     /// 生成实体ID
     /// </summary>
     /// <returns></returns>
-    public static int GetEntityId() {
+    public int GetEntityId()
+    {
         return entityId++;
     }
-
 }
 

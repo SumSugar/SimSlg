@@ -8,8 +8,8 @@ using System;
 using System.Collections.Generic;
 
 public class ObjPoolModule : BaseModuleSingleton<ObjPoolModule> {
-    private int defaultCapacity = 99;//池内对象的默认最大堆叠数
-    private float defaultExpireTime = 60f;//池内对象的默认过期时间
+    private int defaultCapacity = 5;//池内对象的默认最大堆叠数
+    private int defaultExpireTime = 10;//池内对象的默认过期时间
     private Dictionary<string, ObjectPool> objPools = new Dictionary<string, ObjectPool>();//全部对象池
     //private 
     /// <summary>
@@ -18,13 +18,15 @@ public class ObjPoolModule : BaseModuleSingleton<ObjPoolModule> {
     /// <param name="name">对象池的名称</param>
     /// <param name="assetPath">资源路径</param>
     /// <returns></returns>
-    public BaseEntity SpawnEntity(string name,string assetPath){
-        ObjectPool op = GetObjectPool(name);
+    public BaseEntity SpawnEntity(BaseData data, BaseLogic logic, string entityGroup, string assetPath)
+    {
+        ObjectPool op = GetObjectPool(entityGroup);
+        //如果没有获取到对象池，则创建一个新的对象池
         if (op==null)
         {
-            op=CreateObjectPool(name);
+            op=CreateObjectPool(entityGroup);
         }
-        return op.SpawnEntity(assetPath);
+        return op.SpawnEntity(data,logic,entityGroup,assetPath);
     }
     /// <summary>
     /// 回收实体
@@ -34,7 +36,7 @@ public class ObjPoolModule : BaseModuleSingleton<ObjPoolModule> {
         {
             throw new Exception("null");
         }
-        ObjectPool op = GetObjectPool(entity.name);
+        ObjectPool op = GetObjectPool(entity.entityGroup);
         if (op == null)
         {
             throw new Exception("null");
@@ -49,11 +51,12 @@ public class ObjPoolModule : BaseModuleSingleton<ObjPoolModule> {
     /// <param name="expireTime"></param>
     /// <param name="name"></param>
     /// <returns></returns>
-    public ObjectPool CreateObjectPool(int capacity, float expireTime ,string name)
+    public ObjectPool CreateObjectPool(int capacity, int expireTime ,string name)
     {
-        ObjectPool pool = new ObjectPool(capacity, expireTime, name);
-        objPools.Add(name,pool);
-        return pool;
+        ObjectPool op = new ObjectPool(capacity, expireTime, name);
+        op.onDestroy += OnPoolDestroy;//注册对象池销毁事件
+        objPools.Add(name,op);
+        return op;
     }
     /// <summary>
     /// 创建对象池
@@ -62,11 +65,12 @@ public class ObjPoolModule : BaseModuleSingleton<ObjPoolModule> {
     /// <param name="expireTime"></param>
     /// <param name="name"></param>
     /// <returns></returns>
-    public ObjectPool CreateObjectPool(float expireTime, string name)
+    public ObjectPool CreateObjectPool(int expireTime, string name)
     {
-        ObjectPool pool = new ObjectPool(defaultCapacity, expireTime, name);
-        objPools.Add(name, pool);
-        return pool;
+        ObjectPool op = new ObjectPool(defaultCapacity, expireTime, name);
+        op.onDestroy += OnPoolDestroy;//注册对象池销毁事件
+        objPools.Add(name, op);
+        return op;
     }
     /// <summary>
     /// 创建对象池
@@ -76,22 +80,10 @@ public class ObjPoolModule : BaseModuleSingleton<ObjPoolModule> {
     /// <returns></returns>
     public ObjectPool CreateObjectPool(string name)
     {
-        ObjectPool pool = new ObjectPool(defaultCapacity, defaultExpireTime, name);
-        objPools.Add(name, pool);
-        return pool;
-    }
-    /// <summary>
-    /// 撤销对象池
-    /// </summary>
-    /// <param name="name"></param>
-    public void RemoveObjectPool(string name){
-        ObjectPool op=GetObjectPool(name);
-        if (op==null)
-        {
-            throw new Exception("撤销对象不存在");
-        }
-        objPools.Remove(name);
-        op = null;
+        ObjectPool op = new ObjectPool(defaultCapacity, defaultExpireTime, name);
+        op.onDestroy += OnPoolDestroy;//注册对象池销毁事件
+        objPools.Add(name, op);
+        return op;
     }
     /// <summary>
     /// 获取对象池
@@ -101,19 +93,24 @@ public class ObjPoolModule : BaseModuleSingleton<ObjPoolModule> {
     public ObjectPool GetObjectPool(string name) {
         ObjectPool op;
         objPools.TryGetValue(name,out op);
-        if (op==null)
-        {
-            throw new Exception("null");
-        }
         return op;
     }
     /// <summary>
-    /// 自动释放资源
+    /// 对象池销毁事件
+    /// </summary>
+    /// <param name="group"></param>
+    private void OnPoolDestroy(string group) {
+        objPools.Remove(group);
+    }
+    /// <summary>
+    /// 所有对象池的帧调用
     /// </summary>
     public void Update() {
-        foreach (var pool in objPools.Values)
+        //foreach不能删除 
+        List<string> keys = new List<string>(objPools.Keys);
+        for (int i = 0; i < keys.Count; i++)
         {
-            pool.Update();
+            objPools[keys[i]].Update();
         }
     }
 }
