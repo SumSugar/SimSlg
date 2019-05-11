@@ -36,6 +36,7 @@ public abstract class RFUI : MonoBehaviour
         {
             StopAllCoroutines();
             cg.alpha = 1;
+            transform.localScale = Vector3.one;
         }
     }
 }

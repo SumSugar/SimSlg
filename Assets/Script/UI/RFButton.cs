@@ -4,6 +4,7 @@
 // 创建时间：2019-05-01 21:48:32
 // ********************************************************
 using System;
+using UnityEngine;
 using UnityEngine.EventSystems;
 
 public sealed class RFButton : RFUI, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler, IPointerUpHandler,IPointerClickHandler
@@ -42,6 +43,7 @@ public sealed class RFButton : RFUI, IPointerEnterHandler, IPointerExitHandler, 
         }
         StopAllCoroutines();
         StartCoroutine(cg.FadeToAlpha(OnHoverAlpha, FadeTime));
+        StartCoroutine(transform.FadeToScale(new Vector3(1.2f,1.2f,0),FadeTime));
         onPointerEnter?.Invoke(id, eventData);
     }
     /// <summary>
@@ -56,6 +58,7 @@ public sealed class RFButton : RFUI, IPointerEnterHandler, IPointerExitHandler, 
         }
         StopAllCoroutines();
         StartCoroutine(cg.FadeToAlpha(1f, FadeTime));
+        StartCoroutine(transform.FadeToScale(Vector3.one, FadeTime));
         onPointerExit?.Invoke(id, eventData);
     }
     /// <summary>

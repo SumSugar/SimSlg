@@ -5,6 +5,7 @@
 // ********************************************************
 
 using System;
+using System.Collections;
 using UnityEngine;
 
 public static class GameObjectExtension 
@@ -37,5 +38,24 @@ public static class GameObjectExtension
             component = gameObject.AddComponent(type);
         }
         return component;
+    }
+    /// <summary>
+    /// 大小渐变 用于UI动画
+    /// </summary>
+    /// <param name="t">物体</param>
+    /// <param name="targetScale">目标大小</param>
+    /// <param name="duration">持续时间</param>
+    /// <returns></returns>
+    public static IEnumerator FadeToScale(this Transform t, Vector3 targetScale, float duration)
+    {
+        float time = 0f;
+        Vector3 originalScale = t.localScale;
+        while (time < duration)
+        {
+            time += Time.deltaTime;
+            t.localScale = Vector3.Lerp(originalScale, targetScale, time / duration);
+            yield return new WaitForEndOfFrame();
+        }
+        t.localScale = targetScale;
     }
 }
