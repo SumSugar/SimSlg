@@ -7,10 +7,11 @@ using UnityEngine;
 
 public class BaseData 
 {
-
+    public string name;
     public Vector3 position;//实体的位置
     public Quaternion rotation;//实体的朝向  
-    public BaseData(Vector3 position, Quaternion rotation) {
+    public BaseData(string name, Vector3 position, Quaternion rotation) {
+        this.name = name;
         this.position = position;
         this.rotation = rotation;
     }

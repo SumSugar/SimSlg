@@ -5,15 +5,15 @@
 // ********************************************************
 
 
+using UnityEngine;
+
 public class TestModule : BaseModuleSingleton<TestModule>
 {
     public override void Init()
     {
         base.Init();
-        EntityModule.Instance.SpawnEntity<UIEntity>(null, "ui", "PrefabAsset/UI/TestUI");
     }
     public void Update()
     {
-        
     }
 }

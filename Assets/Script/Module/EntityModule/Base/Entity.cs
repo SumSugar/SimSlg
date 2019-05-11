@@ -4,6 +4,7 @@
 // 创建时间：2019-04-27 12:38:50
 // ********************************************************
 
+using UnityEngine;
 
 public class Entity : BaseEntity
 {
@@ -18,13 +19,16 @@ public class Entity : BaseEntity
     public override void OnUnSpawn()
     {
         base.OnUnSpawn();
+        gameObject.transform.position = Vector3.zero;
+        gameObject.transform.rotation = Quaternion.identity;
+        gameObject.layer = defaultLayer;
     }
     public override void Update()
     {
         base.Update();
     }
-    public override void Destroy()
+    public override void OnDes()
     {
-        base.Destroy();
+        base.OnDes();
     }
 }

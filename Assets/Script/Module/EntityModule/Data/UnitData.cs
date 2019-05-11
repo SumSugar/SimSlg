@@ -8,7 +8,7 @@ using UnityEngine;
 
 public class UnitData : BaseData
 {
-    public UnitData(Vector3 position, Quaternion rotation) : base(position, rotation)
+    public UnitData(string name ,Vector3 position, Quaternion rotation) : base(name, position, rotation)
     {
     }
 }

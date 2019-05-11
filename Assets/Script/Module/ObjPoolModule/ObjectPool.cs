@@ -50,7 +50,7 @@ public class ObjectPool
             GameObject go = Object.Instantiate(entityObj) as GameObject;//实例化实体
             entity = go.GetOrAddComponent<BaseEntity>();//添加实体脚本
             entity.OnInit(EntityModule.Instance.GetEntityId(),data, this.group, assetPath);//初始化实体
-            entity.onDestroy += OnEntityDestroy;//注册实体销毁事件
+            entity.onDes += OnEntityDestroy;//注册实体销毁事件
             objects.Add(entity);//添加到对象池容器中
         }
         //调用生成方法
@@ -66,7 +66,7 @@ public class ObjectPool
         //超过了池内最大容量
         if (objects.Count > capacity)
         {
-            entity.SendMessage("Destroy");//通知实体执行销毁事件
+            entity.OnDes();//通知实体执行销毁事件
         }
         else {
             entity.OnUnSpawn();//回收实体
@@ -111,7 +111,7 @@ public class ObjectPool
                 if ((timeNow - objects[i].recycleTime).Seconds > expireTime)
                 {
                     objects[i].gameObject.SetActive(true);
-                    objects[i].SendMessage("Destroy");//通知实体执行销毁事件
+                    objects[i].OnDes();//通知实体执行销毁事件
                 }
             }
         }

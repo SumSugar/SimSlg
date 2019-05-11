@@ -4,35 +4,26 @@
 // 创建时间：2019-05-01 21:48:32
 // ********************************************************
 using System;
-using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class CommonButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler, IPointerUpHandler,IPointerClickHandler
+public sealed class RFButton : RFUI, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler, IPointerUpHandler,IPointerClickHandler
 {
-    [SerializeField]
-    private int id = 0;//UI逻辑中的编号
     private const float FadeTime = 0.3f;//渐变时间
     private const float OnHoverAlpha = 0.7f;//悬挂时透明度
     private const float OnClickAlpha = 0.6f;//点击时透明度
-    private CanvasGroup cg = null;
     private event Action<int,PointerEventData>  onPointerEnter = null;
     private event Action<int, PointerEventData> onPointerExit = null;
     private event Action<int, PointerEventData> onPointerDown = null;
     private event Action<int, PointerEventData> onPointerUp = null;
     private event Action<int, PointerEventData> onPointerClick = null;
-    //记得重写id编号 每个按钮的id不一样 回调给UIEntity才能识别
-    protected virtual void Awake()
-    {
-        cg = gameObject.GetOrAddComponent<CanvasGroup>();
-    }
-    protected virtual void Start()
+    private void Start()
     {
         UIEntity uie = GetComponentInParent<BaseEntity>() as UIEntity;
         if (uie==null)
         {
             throw new Exception("null");
         }
-        //订阅事件
+        //UIEntity订阅所有子UI事件
         onPointerEnter += uie.OnPointerEnter;
         onPointerExit += uie.OnPointerExit;
         onPointerDown += uie.OnPointerDown;
@@ -45,6 +36,10 @@ public class CommonButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
     /// <param name="eventData"></param>
     public void OnPointerEnter(PointerEventData eventData)
     {
+        if (!active)
+        {
+            return;
+        }
         StopAllCoroutines();
         StartCoroutine(cg.FadeToAlpha(OnHoverAlpha, FadeTime));
         onPointerEnter?.Invoke(id, eventData);
@@ -55,6 +50,10 @@ public class CommonButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
     /// <param name="eventData"></param>
     public void OnPointerExit(PointerEventData eventData)
     {
+        if (!active)
+        {
+            return;
+        }
         StopAllCoroutines();
         StartCoroutine(cg.FadeToAlpha(1f, FadeTime));
         onPointerExit?.Invoke(id, eventData);
@@ -65,7 +64,7 @@ public class CommonButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
     /// <param name="eventData"></param>
     public void OnPointerDown(PointerEventData eventData)
     {
-        if (eventData.button != PointerEventData.InputButton.Left)
+        if (!active)
         {
             return;
         }
@@ -78,7 +77,7 @@ public class CommonButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
     /// <param name="eventData"></param>
     public void OnPointerUp(PointerEventData eventData)
     {
-        if (eventData.button != PointerEventData.InputButton.Left)
+        if (!active)
         {
             return;
         }
@@ -91,7 +90,7 @@ public class CommonButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
     /// <param name="eventData"></param>
     public void OnPointerClick(PointerEventData eventData)
     {
-        if (eventData.button != PointerEventData.InputButton.Left)
+        if (!active)
         {
             return;
         }

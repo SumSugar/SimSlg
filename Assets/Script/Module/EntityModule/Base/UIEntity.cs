@@ -61,9 +61,9 @@ public class UIEntity : BaseEntity
     /// <summary>
     /// 销毁
     /// </summary>
-    public override void Destroy()
+    public override void OnDes()
     {
-        base.Destroy();
+        base.OnDes();
     }
     /// <summary>
     /// 更新
@@ -94,7 +94,6 @@ public class UIEntity : BaseEntity
     /// <param name="id"></param>
     /// <param name="eventData"></param>
     public virtual void OnPointerEnter(int id, PointerEventData eventData) {
-
     }
     /// <summary>
     /// 触发事件
@@ -103,7 +102,6 @@ public class UIEntity : BaseEntity
     /// <param name="eventData"></param>
     public virtual void OnPointerExit(int id, PointerEventData eventData)
     {
-        
     }
     /// <summary>
     /// 触发事件
@@ -112,7 +110,6 @@ public class UIEntity : BaseEntity
     /// <param name="eventData"></param>
     public virtual void OnPointerDown(int id, PointerEventData eventData)
     {
-        
     }
     /// <summary>
     /// 触发事件
@@ -121,7 +118,6 @@ public class UIEntity : BaseEntity
     /// <param name="eventData"></param>
     public virtual void OnPointerUp(int id, PointerEventData eventData)
     {
-        
     }
     /// <summary>
     /// 触发事件
@@ -130,6 +126,5 @@ public class UIEntity : BaseEntity
     /// <param name="eventData"></param>
     public virtual void OnPointerClick(int id, PointerEventData eventData)
     {
-        
     }
 }

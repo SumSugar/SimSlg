@@ -14,7 +14,7 @@ public class BaseEntity :BaseLogic,IPoolObject
     public string entityAssetPath;//实体的资源路径
     public string entityName;//实体的名字
     public DateTime recycleTime;//上一次回收时间 用于对象池过期释放判断
-    public event Action<BaseEntity> onDestroy;//销毁事件
+    public event Action<BaseEntity> onDes;//销毁事件
     /// <summary>
     /// 获取实体实例
     /// </summary>
@@ -62,16 +62,13 @@ public class BaseEntity :BaseLogic,IPoolObject
         available = true;
         visible = false;
         gameObject.SetActive(visible);
-        gameObject.transform.position = Vector3.zero;
-        gameObject.transform.rotation = Quaternion.identity;
-        gameObject.layer = defaultLayer;
     }
     /// <summary>
     /// 物体销毁
     /// </summary>
-    public virtual void Destroy()
+    public virtual void OnDes()
     {
-        onDestroy(this);
+        onDes(this);
         Destroy(gameObject);
     }
     /// <summary>

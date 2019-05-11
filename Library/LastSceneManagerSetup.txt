@@ -1,4 +1,4 @@
 sceneSetups:
-- path: Assets/SimSlg/Scenes/SampleScene.unity
+- path: Assets/Example/2.WhatIsInputFilter.unity
   isLoaded: 1
   isActive: 1

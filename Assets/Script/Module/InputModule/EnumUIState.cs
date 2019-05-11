@@ -4,6 +4,6 @@ using UnityEngine;
 
 public enum EnumUIState
 {
-    enable,
-    disable,
+    Enable,
+    Disable,
 }

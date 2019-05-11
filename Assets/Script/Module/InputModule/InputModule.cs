@@ -1,5 +1,5 @@
 // ********************************************************
-// 描述：输入模块
+// 描述：输入模块 负责向inputFilter模块发送事件 并且可以控制所有UI的状态
 // 作者：ShadowRabbit 
 // 创建时间：2019-04-23 15:35:56
 // ********************************************************
@@ -10,20 +10,15 @@ using UnityEngine.EventSystems;
 
 public class InputModule : BaseModuleSingleton<InputModule>
 {
-    #region test
-    Ray ray;
-    RaycastHit hit;
-    #endregion
-    public EnumUIState currentState;//当前UI状态
-    private float dragThresholdMouse=0f;//规定拖拽多远算作拖拽开始
-    private float tapTime = 0.2f;//taptime时间内算作点击
-    private float holdTime = 0.8f;//holdtime后算作长按
-    private float mouseWheelSensitivity = 1.0f;//滚轮默认值
-    private int trackMouseButtons = 2;//鼠标按键数量 默认只有左右键
-    private float flickThreshold = 2f;//一帧内移动该距离 视作弹开
-    private const float k_FlickAccumulationFactor = 0.8f;//弹开时的加速度
+    private EnumUIState currentState;//当前UI状态 关闭时 所有UI失效
+    private readonly float dragThresholdMouse=0f;//规定拖拽多远算作拖拽开始
+    private readonly float tapTime = 0.2f;//taptime时间内算作点击
+    private readonly float holdTime = 0.8f;//holdtime后算作长按
+    private readonly float mouseWheelSensitivity = 1.0f;//滚轮默认值
+    private readonly int trackMouseButtons = 2;//鼠标按键数量 默认只有左右键
     private InputCursorInfo cursorInfo;//当前光标信息 
     private InputMouseButtonInfo[] mouseInfos;//鼠标信息
+    public event Action<EnumUIState> onUIStateChanged;//UI控制器状态改变事件
     public event Action<InputCursorInfo> onPressed;//按下事件
     public event Action<InputCursorInfo> onReleased;//释放事件
     public event Action<InputCursorInfo> onTapped;//点击事件
@@ -35,7 +30,7 @@ public class InputModule : BaseModuleSingleton<InputModule>
     public override void Init()
     {
         base.Init();
-        currentState = EnumUIState.enable;
+        currentState = EnumUIState.Enable;
         // 光标是否初始化
         if (Input.mousePresent)
         {
@@ -53,27 +48,6 @@ public class InputModule : BaseModuleSingleton<InputModule>
     /// </summary>
     public void Update()
     {
-        //#region test
-        //if (Input.GetMouseButtonDown(0))
-        //{
-        //     ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        //    if (Physics.Raycast(ray, out hit))
-        //    {
-        //        BaseData baseData = new BaseData(hit.point, Quaternion.identity);
-        //        EntityModule.Instance.SpawnEntity<Entity>(baseData, "Cube", "Cube");
-        //    }
-        //}
-        //if (Input.GetMouseButtonDown(1))
-        //{
-        //     ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        //    if (Physics.Raycast(ray, out hit))
-        //    {
-        //        Debug.Log(hit.collider.gameObject.name);
-        //        BaseEntity objEntity = hit.collider.gameObject.GetComponent<BaseEntity>();
-        //        EntityModule.Instance.UnSpawnEntity(objEntity);
-        //    }
-        //}
-        //#endregion
         if (cursorInfo!=null)
         {
             UpdateMouse();
@@ -112,7 +86,6 @@ public class InputModule : BaseModuleSingleton<InputModule>
                     mouseInfos[i].isDrag = false;
                     mouseInfos[i].wasHold = false;
                     mouseInfos[i].isHold = false;
-                    mouseInfos[i].flickVelocity = Vector2.zero;
                     onPressed?.Invoke(mouseInfos[i]);
                 }
                 else
@@ -136,17 +109,6 @@ public class InputModule : BaseModuleSingleton<InputModule>
                             onStartedDrag?.Invoke(mouseInfos[i]);
                         }
                         onDragged?.Invoke(mouseInfos[i]);
-                        // 是否满足弹开距离
-                        if (moveDist > flickThreshold)
-                        {
-                            mouseInfos[i].flickVelocity =
-                                (mouseInfos[i].flickVelocity * (1 - k_FlickAccumulationFactor)) +
-                                (mouseInfos[i].delta * k_FlickAccumulationFactor);
-                        }
-                        else
-                        {
-                            mouseInfos[i].flickVelocity = Vector2.zero;
-                        }
                         mouseInfos[i].isDrag = true;//设置拖拽状态
                     }
                     else
@@ -182,5 +144,13 @@ public class InputModule : BaseModuleSingleton<InputModule>
                 zoomAmount = Input.GetAxis("Mouse ScrollWheel") * mouseWheelSensitivity
             });
         }
+    }
+    /// <summary>
+    /// 设置UI是否可用
+    /// </summary>
+    /// <param name="state"></param>
+    public void setUIState(EnumUIState state) {
+        currentState = state;
+        onUIStateChanged?.Invoke(currentState);
     }
 }

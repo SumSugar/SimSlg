@@ -24,6 +24,11 @@ public class EntityModule : BaseModuleSingleton<EntityModule> {
         BaseEntity entity = ObjPoolModule.Instance.SpawnEntity(data,entityGroup,assetPath);
         return entity as T;
     }
+    public T SpawnEntity<T>(BaseData data, string assetPath) where T : BaseEntity
+    {
+        BaseEntity entity = ObjPoolModule.Instance.SpawnEntity(data, data.name, assetPath);
+        return entity as T;
+    }
     /// <summary>
     /// 回收实体
     /// </summary>

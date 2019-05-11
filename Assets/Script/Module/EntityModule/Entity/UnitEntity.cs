@@ -24,8 +24,8 @@ public class UnitEntity : Entity
     {
         base.Update();
     }
-    public override void Destroy()
+    public override void OnDes()
     {
-        base.Destroy();
+        base.OnDes();
     }
 }
