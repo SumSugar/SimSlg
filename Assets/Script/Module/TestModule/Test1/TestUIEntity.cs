@@ -9,14 +9,14 @@ using UnityEngine.EventSystems;
 
 public class TestUIEntity : UIEntity
 {
-    public override void OnInit(int entityId, BaseData data, string entityGroup, string assetPath)
+    public override void OnInit(BaseData data, string entityGroup, string assetPath)
     {
         //UIEntity自带canvas 与 CanvasGroup(不会重复添加 预设物可以持有该组件)
         //canvas用于触发ugui的事件
         //CanvasGroup用于渐变关闭 打开ui 微弱的动画效果
         //因为每个UIEntity都自带画布 所以层级不同会遮挡
         //通过depth属性可以更变UI层级 越高则优先显示
-        base.OnInit(entityId, data, entityGroup, assetPath);
+        base.OnInit(data, entityGroup, assetPath);
         //SetDepth(2);设置层级
     }
     /// <summary>

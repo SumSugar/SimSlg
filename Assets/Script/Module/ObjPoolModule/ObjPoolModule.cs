@@ -22,10 +22,7 @@ public class ObjPoolModule : BaseModuleSingleton<ObjPoolModule> {
     {
         ObjectPool op = GetObjectPool(entityGroup);
         //如果没有获取到对象池，则创建一个新的对象池
-        if (op==null)
-        {
-            op=CreateObjectPool(entityGroup,assetPath);
-        }
+        op = op ?? CreateObjectPool(entityGroup, assetPath);
         return op.SpawnEntity(data);
     }
     /// <summary>
@@ -58,13 +55,6 @@ public class ObjPoolModule : BaseModuleSingleton<ObjPoolModule> {
         objPools.Add(name,op);
         return op;
     }
-    /// <summary>
-    /// 创建对象池
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    /// <param name="expireTime"></param>
-    /// <param name="name"></param>
-    /// <returns></returns>
     public ObjectPool CreateObjectPool(int expireTime, string name, string assetPath)
     {
         ObjectPool op = new ObjectPool(defaultCapacity, expireTime, name, assetPath);
@@ -72,12 +62,6 @@ public class ObjPoolModule : BaseModuleSingleton<ObjPoolModule> {
         objPools.Add(name, op);
         return op;
     }
-    /// <summary>
-    /// 创建对象池
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    /// <param name="name"></param>
-    /// <returns></returns>
     public ObjectPool CreateObjectPool(string name,string assetPath)
     {
         ObjectPool op = new ObjectPool(defaultCapacity, defaultExpireTime, name, assetPath);

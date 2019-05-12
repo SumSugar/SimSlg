@@ -14,9 +14,9 @@ public class TestEntity : Entity
     /// <param name="data"></param>
     /// <param name="entityGroup"></param>
     /// <param name="assetPath"></param>
-    public override void OnInit(int entityId, BaseData data, string entityGroup, string assetPath)
+    public override void OnInit(BaseData data, string entityGroup, string assetPath)
     {
-        base.OnInit(entityId, data, entityGroup, assetPath);
+        base.OnInit(data, entityGroup, assetPath);
     }
     /// <summary>
     /// 被对象池调用创建时

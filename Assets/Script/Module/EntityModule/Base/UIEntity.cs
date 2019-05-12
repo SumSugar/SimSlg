@@ -20,13 +20,12 @@ public class UIEntity : BaseEntity
     /// <param name="data"></param>
     /// <param name="entityGroup"></param>
     /// <param name="assetPath"></param>
-    public override void OnInit(int entityId, BaseData data, string entityGroup, string assetPath)
+    public override void OnInit(BaseData data, string entityGroup, string assetPath)
     {
         canvas = gameObject.GetOrAddComponent<Canvas>();
         cg = gameObject.GetOrAddComponent<CanvasGroup>();
         canvas.sortingOrder = depth;
         canvas.overrideSorting = true;
-        this.entityId = entityId;
         this.entityAssetPath = assetPath;
         this.entityGroup = entityGroup;
         this.entityName = gameObject.name + entityId;

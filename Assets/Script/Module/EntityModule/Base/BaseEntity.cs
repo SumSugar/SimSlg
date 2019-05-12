@@ -30,34 +30,37 @@ public class BaseEntity :BaseLogic,IPoolObject
     /// <param name="logic"></param>
     /// <param name="entityGroup"></param>
     /// <param name="assetPath"></param>
-    public virtual void OnInit(int entityId,BaseData data,string entityGroup,string assetPath) {
+    public virtual void OnInit(BaseData data,string entityGroup,string assetPath) {
         if (data==null)
         {
             new Exception("null");
         }
-        this.entityId = entityId;
         this.entityData = data;
         this.entityGroup = entityGroup;
         this.entityAssetPath = assetPath;
-        this.entityName = gameObject.name + entityId;
     }
     /// <summary>
     /// 实体生成
     /// </summary>
     public virtual void OnSpawn(BaseData data) {
-        available = false;
-        visible = true;
+        this.entityId = EntityModule.Instance.GenerateId();//创建id
         if (data!=null)
         {
+            this.entityData = data;//数据赋值
+            this.entityName = data.name + entityId;//创建实体名称
+            gameObject.name = entityName;//设置物体名字
             gameObject.transform.position = data.position;
             gameObject.transform.rotation = data.rotation;
         }
+        available = false;
+        visible = true;
         gameObject.SetActive(visible);
     }
     /// <summary>
     /// 实体回收
     /// </summary>
     public virtual void OnUnSpawn() {
+        this.entityData = null;
         recycleTime = DateTime.Now;
         available = true;
         visible = false;

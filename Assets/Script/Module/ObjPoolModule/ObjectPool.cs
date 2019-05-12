@@ -49,7 +49,7 @@ public class ObjectPool
             Object entityObj = CreateEntity();//获取资源
             GameObject go = Object.Instantiate(entityObj) as GameObject;//实例化实体
             entity = go.GetOrAddComponent<BaseEntity>();//添加实体脚本
-            entity.OnInit(EntityModule.Instance.GetEntityId(),data, this.group, assetPath);//初始化实体
+            entity.OnInit(data, this.group, assetPath);//初始化实体
             entity.onDes += OnEntityDestroy;//注册实体销毁事件
             objects.Add(entity);//添加到对象池容器中
         }

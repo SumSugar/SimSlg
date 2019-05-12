@@ -8,9 +8,9 @@ using UnityEngine;
 
 public class Entity : BaseEntity
 {
-    public override void OnInit(int entityId, BaseData data, string entityGroup, string assetPath)
+    public override void OnInit(BaseData data, string entityGroup, string assetPath)
     {
-        base.OnInit(entityId, data, entityGroup, assetPath);
+        base.OnInit(data, entityGroup, assetPath);
     }
     public override void OnSpawn(BaseData data)
     {
